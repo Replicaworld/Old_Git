@@ -21,9 +21,9 @@ s3_conf = cfg['s3']
 trend_conf = cfg['trending']
 
 # COMMAND ----------
-os.system("export AWS_ACCESS_KEY_ID=AKIAIMBMZVCDDQKHP66A AWS_SECRET_ACCESS_KEY=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 AWS_DEFAULT_REGION=us-east-1")
-end = int(round(time.time()))   #time at present in seconds
-start = int(round(time.time())) - 24*60*60   #time exactly 24 hrs earlier in seconds
+#os.system("export AWS_ACCESS_KEY_ID=AKIAIMBMZVCDDQKHP66A AWS_SECRET_ACCESS_KEY=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 AWS_DEFAULT_REGION=us-east-1")
+#end = int(round(time.time()))   #time at present in seconds
+#start = int(round(time.time())) - 24*60*60   #time exactly 24 hrs earlier in seconds
 
 def getDataPath(date):
   return "s3n://exports.localytics.n-q/newsinshorts/" + str(date) + "/*/*.log.gz"
@@ -35,7 +35,7 @@ datapath = ','.join([getDataPath(date_today),getDataPath(date_yesterday)])
 print datapath
 
 # COMMAND ----------
-conf = SparkConf().setMaster(spark_conf['master_url']).setAppName(trend_conf['app_name']).setAll([("spark.mesos.coarse",trend_conf['mesos']),("spark.eventLog.enabled",trend_conf['logging']),("spark.cores.max", trend_conf['cores']),("spark.executor.memory",trend_conf['memory'])])
+#conf = SparkConf().setMaster(spark_conf['master_url']).setAppName(trend_conf['app_name']).setAll([("spark.mesos.coarse",trend_conf['mesos']),("spark.eventLog.enabled",trend_conf['logging']),("spark.cores.max", trend_conf['cores']),("spark.executor.memory",trend_conf['memory'])])
 sc = SparkContext(conf = conf)
 user_data = sc.textFile(datapath).map(lambda x: json.loads(x)).filter(lambda x: 'name' in x and 'custom_0' in x and 'custom' in x and x['custom_0'] == 'en').map(lambda x : (x['name'],x['custom']))
 user_data.cache()
